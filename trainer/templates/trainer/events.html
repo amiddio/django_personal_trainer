@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Events / List{% endblock %}
+
+{% block page_title %}All Events{% endblock %}
+
+{% block content %}
+    {% load trainer_extras %}
+
+<div>
+    Tags: <a href="{% url 'trainer:events-list' %}">all</a>,
+{% for tag in tags.all %}
+<a href="{% url 'trainer:events-list-by-tag' tag.slug %}">
+{{ tag.name }}
+</a>
+{% if not forloop.last %}, {% endif %}
+{% endfor %}
+</div>
+
+    <table width="100%" class="mt-2">
+        <thead>
+            <tr>
+                <td style="padding-bottom: 10px">
+                    <b>Trainer</b>
+                </td>
+                <td>
+                    <b>Event name</b>
+                </td>
+                <td>
+                    <b>Tags</b>
+                </td>
+                <td>
+                    <b>Start date/time</b>
+                </td>
+                <td>
+                    <b>End date/time</b>
+                </td>
+                <td>
+                    <b>Price</b>
+                </td>
+                <td>
+                    <b>Places</b>
+                </td>
+                <td></td>
+            </tr>
+        <tbody>
+        {% for event in events %}
+        <tr>
+            <td style="padding-bottom: 10px">
+                <b>{{ event.trainer.name }}</b>
+            </td>
+            <td>
+                <b>{{ event.name }}</b>
+            </td>
+            <td>
+                {{ event.tags.all|join:', ' }}
+            </td>
+            <td>
+                {{ event.start|formated_date }}
+            </td>
+            <td>
+                {{ event.end|formated_date }}
+            </td>
+            <td>
+                {{ event.price }}
+            </td>
+            <td>
+                {{ event.book_places }}
+            </td>
+            <td>
+                {% if event.book_places > 0 %}
+                    <a href="{{ event.get_absolute_url }}">Detail</a>
+                {% else %}
+                    Sold out
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include "includes/pagination.html" %}
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Trainers / List{% endblock %}
+
+{% block page_title %}Trainers{% endblock %}
+
+{% block content %}
+
+    <table>
+        <tbody>
+        {% for trainer in trainers %}
+        <tr>
+            <td style="padding-bottom: 30px">
+            {% if trainer.avatar %}
+            <img src="{{ trainer.avatar.url }}" width="200" alt="{{ trainer.name }}" title="{{ trainer.name }}" />
+            {% endif %}
+            </td>
+            <td style="padding: 30px; vertical-align: top;">
+                <h3>
+                    <a href="{{ trainer.get_absolute_url }}">{{ trainer.name }}</a>
+                </h3>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% include "includes/pagination.html" %}
+
+{% endblock %}

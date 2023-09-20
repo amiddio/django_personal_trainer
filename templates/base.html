@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  {% load bootstrap5 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+
+    <nav class="py-2 bg-light border-bottom">
+    <div class="container d-flex flex-wrap">
+      <ul class="nav me-auto">
+        <li class="nav-item"><a href="{% url 'trainer:home-page' %}" class="nav-link link-dark px-2 active" aria-current="page">Home</a></li>
+        <li class="nav-item"><a href="{% url 'trainer:trainers-list' %}" class="nav-link link-dark px-2">Trainers</a></li>
+        <li class="nav-item"><a href="{% url 'trainer:events-list' %}" class="nav-link link-dark px-2">Events</a></li>
+        <li class="nav-item"><a href="{% url 'contact:form' %}" class="nav-link link-dark px-2">Contact</a></li>
+      </ul>
+        {% if request.user.is_authenticated %}
+        <div class="dropdown text-end">
+          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            {% if request.user.profile.avatar %}
+            <img src="{{ MEDIA_URL }}{{request.user.profile.avatar}}" alt="mdo" width="32" height="32" class="rounded-circle">
+            {% else %}
+            Hello {{ request.user.first_name|default:request.user.username }}
+            {% endif %}
+          </a>
+          <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+            <li><a class="dropdown-item" href="{% url 'account:dashboard' %}">Dashboard</a></li>
+            <li><a class="dropdown-item" href="{% url 'account:edit' %}">Edit</a></li>
+            <li><a class="dropdown-item" href="{% url 'account:password_change' %}">Change your password</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'account:logout' %}">Sign out</a></li>
+          </ul>
+        </div>
+        {% else %}
+          <a class="nav-link link-dark px-2" href="{% url 'account:login' %}">Log-in</a>
+          <a class="nav-link link-dark px-2" href="{% url 'account:register' %}">Register</a>
+        {% endif %}
+
+  </nav>
+  <header class="py-3 mb-4">
+  </header>
+  {% bootstrap_messages %}
+
+  <h1 class="mb-4">{% block page_title %}{% endblock %}</h1>
+
+  {% block content %}
+  {% endblock %}
+</div>
+{% block scripts %}
+{% endblock %}
+</body>
+</html>

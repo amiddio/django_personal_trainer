@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Home page {% endblock %}
+
+{% block page_title %} Home {% endblock %}
+
+{% block content %}
+{% load trainer_extras %}
+<h3>Trainers</h3>
+<div class="container">
+    <div class="row align-items-start">
+    {% for trainer in trainers %}
+    <div class="col">
+        <div>{{ trainer.name }}</div>
+        {% if trainer.avatar %}
+        <a href="{{ trainer.get_absolute_url }}">
+            <img src="{{ trainer.avatar.url }}" width="200" alt="{{ trainer.name }}" title="{{ trainer.name }}" />
+        </a>
+        {% endif %}
+    </div>
+    {% endfor %}
+    </div>
+    <a href="{% url 'trainer:trainers-list' %}">All trainers</a>
+</div>
+<br><br><br>
+<h3>Events</h3>
+<div class="container">
+
+    <table width="100%" class="mt-2">
+        <thead>
+            <tr>
+                <td style="padding-bottom: 10px">
+                    <b>Trainer</b>
+                </td>
+                <td>
+                    <b>Event name</b>
+                </td>
+                <td>
+                    <b>Tags</b>
+                </td>
+                <td>
+                    <b>Start date/time</b>
+                </td>
+                <td>
+                    <b>End date/time</b>
+                </td>
+                <td>
+                    <b>Price</b>
+                </td>
+                <td>
+                    <b>Places</b>
+                </td>
+                <td></td>
+            </tr>
+        <tbody>
+        {% for event in events %}
+        <tr>
+            <td style="padding-bottom: 10px">
+                <b>{{ event.trainer.name }}</b>
+            </td>
+            <td>
+                <b>{{ event.name }}</b>
+            </td>
+            <td>
+                {{ event.tags.all|join:', ' }}
+            </td>
+            <td>
+                {{ event.start|formated_date }}
+            </td>
+            <td>
+                {{ event.end|formated_date }}
+            </td>
+            <td>
+                {{ event.price }}
+            </td>
+            <td>
+                {{ event.book_places }}
+            </td>
+            <td>
+                {% if event.book_places > 0 %}
+                    <a href="{{ event.get_absolute_url }}">Detail</a>
+                {% else %}
+                    Sold out
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'trainer:events-list' %}">All events</a>
+    </div>
+</div>
+
+{% endblock %}

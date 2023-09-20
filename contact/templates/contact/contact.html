@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %} Contact us {% endblock %}
+
+{% block page_title %} Contact us {% endblock %}
+
+{% block content %}
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <div class="mb-3 row form-check">
+                <label id="{{ field.id_for_label }}" class="col-sm-2 col-form-label">{{ field.label }}</label>
+                <div class="col-sm-6">
+                {{ field }}
+                </div>
+                {% if field.help_text %}
+                <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+                {% if field.errors %}
+                {% for error in field.errors %}
+                <div style="color: red">
+                    {{error}}
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        {% endfor %}
+        <p><input class="btn btn-primary"  type="submit" value="Send"></p>
+    </form>
+{% endblock %}

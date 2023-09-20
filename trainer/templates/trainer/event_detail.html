@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Event / {{event.name}} {% endblock %}
+
+{% block page_title %} {{event.name}} {% endblock %}
+
+{% block content %}
+    {% load trainer_extras %}
+    <table>
+        <tbody>
+        <tr>
+            <td style="vertical-align: top;">
+            <img src="{{ MEDIA_URL }}{{ event.trainer.avatar }}" alt="{{ event.trainer.name }}" title="{{ event.trainer.name }}" />
+            </td>
+            <td style="padding: 30px; vertical-align: top;">
+                <h3>About Event</h3>
+
+                <p>Tags: {{ event.tags.all|join:', ' }}</p>
+                <p>{{ event.description|linebreaks }}</p>
+                <p>Start: <b>{{ event.start|formated_date }}</b></p>
+                <p>End: <b>{{ event.end|formated_date }}</b></p>
+                <p>Price: <b>{{ event.price }}</b></p>
+                <p>Total places: <b>{{ event.total_places }}</b></p>
+                <p>Booked users:
+                    {% for user in event.user.all %}
+                        <i>{{ user.first_name|default:user.username }}{% if not forloop.last %}, {% endif %}</i>
+                    {% empty %}
+                        Nobody
+                    {% endfor %}
+                </p>
+                <p>Places left: <b>{{ event.book_places }}</b></p>
+                <p>
+                    {% if request.user in event.user.all %}
+                        Booked
+                    {% else %}
+                        <form action="{% url 'trainer:event-book' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="{{ request.user.pk }}" />
+                            <input type="hidden" name="event_id" value="{{ event.pk }}" />
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <button class="btn btn-sm btn-primary" type="submit">Book</button>
+                          </form>
+                    {% endif %}
+                </p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+{% endblock %}
